@@ -20,6 +20,7 @@ class Mesonet(RMParser):
     # The function that will be executed must have this name
     def perform(self):
         # downloading data from a URL convenience function since other python libraries can be used
+        # This URL is maintained on a private server by Ken Thomas. Contact: mesonetapi@gmail.com
         URL = "http://lab.zanek.net/mesonet/api/currentobservations"
         stationID = "ALTU"
         data = self.openURL(URL)
@@ -65,12 +66,19 @@ class Mesonet(RMParser):
                 except:
                     dew = None
 
+                try:
+                    solarRadEnergyMJ = self.__toFloat(station.get("SRAD"))
+                except:
+                    solarRadEnergyMJ = None
+
+
                 self.addValue(RMParser.dataType.MINTEMP, timestamp, tmin)
                 self.addValue(RMParser.dataType.MAXTEMP, timestamp, tmax)
                 self.addValue(RMParser.dataType.RAIN, timestamp, rain)
                 self.addValue(RMParser.dataType.PRESSURE, timestamp, pressure)
                 self.addValue(RMParser.dataType.WIND, timestamp, wind)
                 self.addValue(RMParser.dataType.DEWPOINT, timestamp, dew)
+                self.addValue(RMParser.dataType.SOLARRADIATION, timestamp, solarRadEnergyMJ)
 
                 if self.parserDebug:
                     log.debug(self.result)
